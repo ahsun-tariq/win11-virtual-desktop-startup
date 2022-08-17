@@ -2,15 +2,13 @@ import ctypes, time, json, subprocess, os
 
 with open("apps.json") as jsonFile:
     apps = json.load(jsonFile)
-    
-def launch_apps_to_virtual_desktops(desktops=4,apps=apps):
+
+def launch_apps(desktops=4,apps=apps):
 
     os.add_dll_directory(os.getcwd())
     virtual_desktop_accessor = ctypes.WinDLL("VirtualDesktopAccessor.dll")
 
     for i in range(0,desktops):
-        
-        time.sleep(0.25) # Wait for the desktop to switch
         apps_to_start = []
         print(f'Starting {apps_to_start} on desktop {i}')
         sleep_time = 0
@@ -26,7 +24,7 @@ def launch_apps_to_virtual_desktops(desktops=4,apps=apps):
         virtual_desktop_accessor.GoToDesktopNumber(i)
         for app in apps_to_start:
             p = subprocess.Popen(apps[app]['path'])
-        time.sleep(sleep_time) # Wait for apps to open their windows
-    virtual_desktop_accessor.GoToDesktopNumber(0) # Go back to the 1st desktop
+        time.sleep(sleep_time)
+    virtual_desktop_accessor.GoToDesktopNumber(0) 
 
-launch_apps_to_virtual_desktops()
+launch_apps()
